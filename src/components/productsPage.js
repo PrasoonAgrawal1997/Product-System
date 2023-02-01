@@ -3,12 +3,25 @@ import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import { productData } from "../dummyData";
 
 const ProductsPage = (props) => {
-  const { subTotal, setSubTotal } = props;
+  const {
+    subTotal,
+    setSubTotal,
+    setTotal,
+    setPromoCodeVals,
+    setPromoCodeApplied,
+    setError,
+    setSuccess,
+  } = props;
   const [productsAdded, setProductsAdded] = useState([]);
 
   //____________________________________________________________________________________________________
   // this function is used to add or remove product, and called when we click on add or remove icons
   const handleAddRemoveProduct = (productId, operation) => {
+    setTotal(0);
+    setPromoCodeApplied("");
+    setSuccess("");
+    setError("");
+    setPromoCodeVals({});
     if (operation === "add") setProductsAdded([...productsAdded, productId]);
     else {
       const addedProductsCopy = [...productsAdded];
