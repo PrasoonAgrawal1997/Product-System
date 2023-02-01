@@ -1,8 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import { productData } from "../dummyData";
 
 const ProductsPage = (props) => {
+  const { subTotal, setSubTotal } = props;
+  const [productsAdded, setProductsAdded] = useState([]);
+
+  //____________________________________________________________________________________________________
+  // this function is used to add or remove product, and called when we click on add or remove icons
+  const handleAddRemoveProduct = (productId, operation) => {
+    if (operation === "add") setProductsAdded([...productsAdded, productId]);
+    else {
+      const addedProductsCopy = [...productsAdded];
+      const index = addedProductsCopy.indexOf(productId);
+      if (index !== -1) addedProductsCopy.splice(index, 1);
+      setProductsAdded(addedProductsCopy);
+    }
+  };
+
+  //____________________________________________________________________________________________________
+  // function to get count of how many times particular product added.
+  const getOccurrence = (addedProducts, productToFind) => {
+    var count = 0;
+    addedProducts.forEach((product) => product === productToFind && count++);
+    return count;
+  };
+
+  //____________________________________________________________________________________________________
+  // this useEffect will be called everytime when product is added, to calculate the total price
+  useEffect(() => {
+    let total = 0;
+    productData?.map((product) => {
+      total += getOccurrence(productsAdded, product.id) * product.price;
+    });
+    setSubTotal(total);
+  }, [productsAdded]);
+
   //____________________________________________________________________________________________________
   // JSX for product table.
   return (
@@ -33,10 +66,17 @@ const ProductsPage = (props) => {
             <td className="py-3">{index + 1}.</td>
             <td className="py-3">{product.id}</td>
             <td className="py-3">{product.name}</td>
-            <td className="text-center py-3">1</td>
             <td className="text-center py-3">
-              <PlusCircle className="mx-3" />
-              <DashCircle />
+              {getOccurrence(productsAdded, product.id)}
+            </td>
+            <td className="text-center py-3">
+              <PlusCircle
+                className="mx-3"
+                onClick={() => handleAddRemoveProduct(product.id, "add")}
+              />
+              <DashCircle
+                onClick={() => handleAddRemoveProduct(product.id, "remove")}
+              />
             </td>
             <td className="text-end py-3">${product.price}</td>
           </tr>
@@ -49,7 +89,7 @@ const ProductsPage = (props) => {
             <strong>SUBTOTAL</strong>
           </td>
           <td className="text-end py-3">
-            <strong>$2500</strong>
+            <strong>${subTotal}</strong>
           </td>
         </tr>
       </tfoot>
