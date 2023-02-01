@@ -101,7 +101,7 @@ const PricePage = (props) => {
           <div className="col text-end">
             {JSON.stringify(promoCodeVals) === "{}"
               ? 0
-              : promoCodeVals.discount}
+              : promoCodeVals?.discount}
             %
           </div>
         </div>
@@ -111,7 +111,12 @@ const PricePage = (props) => {
             <strong>To Pay</strong>
           </div>
           <div className="col text-end">
-            <strong>${total === 0 ? subTotal : total}</strong>
+            <strong>
+              $
+              {total === 0 && promoCodeVals?.discount != 100
+                ? subTotal.toFixed(2)
+                : total.toFixed(2)}
+            </strong>
           </div>
         </div>
       </div>

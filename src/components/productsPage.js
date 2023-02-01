@@ -102,7 +102,7 @@ const ProductsPage = (props) => {
             <strong>SUBTOTAL</strong>
           </td>
           <td className="text-end py-3">
-            <strong>${subTotal}</strong>
+            <strong>${subTotal.toFixed(2)}</strong>
           </td>
         </tr>
       </tfoot>
